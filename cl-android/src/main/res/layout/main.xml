@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      android:id="@+id/cajaVertical"
+	      android:layout_width="fill_parent"
+	      android:layout_height="fill_parent"
+	      android:orientation="vertical" >
+  <jackpal.androidterm.emulatorview.EmulatorView
+      android:id="@+id/emulatorView"
+      android:layout_width="fill_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:focusable="true"
+      android:focusableInTouchMode="true" />
+</LinearLayout>
+<!--
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	      android:orientation="vertical"
+	      android:layout_width="fill_parent"
+	      android:layout_height="fill_parent"
+	      android:descendantFocusability="beforeDescendants"
+	      android:focusableInTouchMode="true">
+  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content">
+    <EditText
+	android:inputType="textMultiLine"
+	android:lines="20"
+	android:minLines="14"
+	android:maxLines="200"
+	android:gravity="top|left"
+	android:id="@+id/texto"
+	android:layout_width="fill_parent"
+	android:layout_height="match_parent"
+	android:scrollbars="vertical">
+    </EditText>
+  </ScrollView>
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:descendantFocusability="beforeDescendants"
+		android:focusableInTouchMode="true">
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="Ejecuta"
+	android:onClick="ejecutaCodigo"/>
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="Borra"
+	android:onClick="borraCodigo"/>
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="Guarda"
+	android:onClick="guardaCodigo"/>
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="Carga"
+	android:onClick="cargaCodigo"/>
+  </LinearLayout>
+  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:descendantFocusability="beforeDescendants"
+		android:focusableInTouchMode="true">
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="app:*dir*"
+	android:onClick="appDir"/>
+    <Button
+	android:layout_height="wrap_content"
+	android:layout_width="wrap_content"
+	android:text="asdf:*central-registry*"
+	android:onClick="asdfCR"/>
+  </LinearLayout>
+</LinearLayout>
+-->

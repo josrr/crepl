@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/anarch/desarrollo/ecl.git/contrib/cl-android/cl-android/build/intermediates/exploded-aar/cl-android/emulatorview/unspecified/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="afb487482b5c19154fcd18ba1482a6e1daad3816">
+        <dex dex="/home/anarch/desarrollo/ecl.git/contrib/cl-android/cl-android/build/intermediates/pre-dexed/debug/classes-9e5604ab668a5b3ffea4c971a9d0af8028d6956b.jar" />
+    </item>
+
+</items>

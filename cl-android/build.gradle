@@ -1,0 +1,60 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs' //set libs as .so's location instead of jniLibs
+        jni.srcDirs = [] //disable automatic ndk-build call with auto-generated Android.mk
+    }
+
+    task ndkBuild(type: Exec) {
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            commandLine 'ndk-build.cmd', '-C', file('src/main').absolutePath
+        } else {
+            commandLine 'ndk-build', '-C', file('src/main').absolutePath
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+    defaultConfig {
+    	applicationId "lisparm.clandroid"
+	minSdkVersion 11
+	targetSdkVersion 11
+	ndk {
+	    moduleName "android-ecl"
+	    abiFilters 'armeabi', 'mips', 'x86'
+	    ldLibs "log"
+	}
+   }
+   android {
+     lintOptions {
+         abortOnError false
+	 disable 'OldTargetApi'
+     }
+     buildTypes {
+        debug {
+	    minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+     }
+   }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:deprecation"
+} 
+
+
+dependencies {
+	compile project(':emulatorview')
+}

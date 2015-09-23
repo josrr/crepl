@@ -1,0 +1,34 @@
+
+
+
+buildscript {
+    repositories {
+        jcenter()
+	mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.1.3'
+	classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+}
+
+subprojects {
+    def androidHome
+
+    if ((androidHome = System.env.'ANDROID_HOME')
+            && (androidHome = androidHome as File).exists()
+	    && androidHome.canWrite())
+	apply plugin: 'android-sdk-manager'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint::deprecation"
+}
