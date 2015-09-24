@@ -11,6 +11,10 @@ permited to include code licensed under the Apache License Version 2.0 in a
 project licensed under the GPL version 3. More information:
 http://www.gnu.org/licenses/license-list.html#GPLCompatibleLicenses.
 
+## Screenshot
+
+![Screenshot](https://github.com/josrr/crepl/raw/master/screenshot.png)
+
 ## Dependencies
 
 ### Embedded Common Lisp (ECL)
