@@ -144,7 +144,7 @@
 		(** ++)
 		(*** +++)
 		(,sexp-val ,sexp))
-	   (app:logmsg "execute-sexp sexp-val: ~A~%" ,sexp-val)
+	   ;(app:logmsg "execute-sexp sexp-val: ~A~%" ,sexp-val)
 	   (setf +++ ++
 		 ++ +
 		 + ,sexp-val)
