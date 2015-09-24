@@ -5,16 +5,15 @@
 
 ### Embedded Common Lisp (ECL)
 
-For compile an run this application you need the experimental branch of ECL that
-you can get from
+For compile and run this application you need the experimental branch of ECL that
+you can get from https://gitlab.com/embeddable-common-lisp/ecl
 
-https://gitlab.com/embeddable-common-lisp/ecl
-
-To get only the experimental branch use this git command line:
+Get only the experimental branch; use this git command line:
 
     git clone -b experimental https://gitlab.com/embeddable-common-lisp/ecl.git
 
-For instructions on how to compile ECL please read  https://gitlab.com/embeddable-common-lisp/ecl/blob/experimental/README.android
+For instructions on how to compile ECL please read
+https://gitlab.com/embeddable-common-lisp/ecl/blob/experimental/README.android
 
 ### Gradle
 
