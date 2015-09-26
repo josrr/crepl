@@ -29,6 +29,10 @@ Get only the experimental branch; use this git command line:
 For instructions on how to compile ECL please read
 https://gitlab.com/embeddable-common-lisp/ecl/blob/experimental/README.android
 
+In Debian or Ubuntu you need the package gcc-multilib.
+
+### Android SDK and NDK
+
 ### Gradle
 
 https://gradle.org/
