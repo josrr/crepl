@@ -29,8 +29,8 @@ import java.io.UnsupportedEncodingException;
 public class ECLOutputStream extends OutputStream
 {
     private static String TAG = Constants.TAG;
-    private static Activity activity;
-    private static Boolean isResult = false;
+    private Activity activity;
+    /*private Boolean isResult = false;*/
 
     public ECLOutputStream (Activity a) {
 	activity = a;
@@ -40,8 +40,9 @@ public class ECLOutputStream extends OutputStream
 	Log.w(TAG, "ECLOutputStream write value:" + value);
     }
 
-    private static byte[] linea = new byte[Constants.SESSION_BUFFER_SIZE];
-    private static int posicion = 0;
+    private byte[] linea = new byte[Constants.SESSION_BUFFER_SIZE];
+    private int posicion = 0;
+    private String lastWord;
 
     public byte[] copyOfRange(byte[] from, int start, int end){
         int length = end - start;
@@ -50,13 +51,20 @@ public class ECLOutputStream extends OutputStream
         return result;
     }
 
+    /*private void coloursLastWord() {
+	int clObjectType = ECLSymbolAnalize(lastWord);
+	if ( clObjectType > 0 ) {
+	    
+	}
+    }*/
+
     public void write(byte[] bytes, int offset, int count) throws IOException {
 	String str = new String(bytes, offset, count, "UTF-8");
 	Log.w(TAG, "ECLOutputStream write string:" + str.length() +
 	      " count:" + count);
 	/* Todo esto es probablemente evitable -> debo usar (cl:read) */
 	if ( count == 1 &&
-	     (bytes[0] == '\n' || bytes[0] == '\r' || bytes[0] == 127 ) ) {
+	     (bytes[0] == '\n' || bytes[0] == '\r' || bytes[0] == 127 )) {
 	    if ( bytes[0] == 127 && posicion > 0 ) {
 		Log.w(TAG, "borrando " + ((int) linea[posicion-1] & 0xFF) +" antes:   " + posicion);
 		if ( (linea[(posicion-1)] & 0x80) == 0 ) {
@@ -67,7 +75,10 @@ public class ECLOutputStream extends OutputStream
 		    }
 		}
 		Log.w(TAG, "borrado  " + ((int) linea[posicion] & 0xFF) + " después: " + posicion);
-	    } else {
+		//} else if (  bytes[0] == ' ' || bytes[0] == '\t' && lastWord.length() > 0 ) {
+		/* Analizamos la palabra anterior y la coloreamos según el tipo de objeto que sea */
+		//coloursLastWord(clObjectType);
+	    } else /*if ( bytes[0] == '\n' || bytes[0] == '\r' )*/ {
 		String codigo = new String(copyOfRange(linea, 0, posicion), "UTF-8");
 		if ( codigo.length() > 0 ) {
 		    Log.w(TAG,"ECLSession - enviando Código: " + codigo);
@@ -92,7 +103,7 @@ public class ECLOutputStream extends OutputStream
 		linea[posicion++] = b[i];
 	    Log.w(TAG, "\tstr:" + s + "\tbytes:" + new String(b, "UTF-8"));
 	} catch (UnsupportedEncodingException e) {
-		Log.e(TAG, "Not supported character encoding.", e);
+	    Log.e(TAG, "Not supported character encoding.", e);
 	}
     }
 }

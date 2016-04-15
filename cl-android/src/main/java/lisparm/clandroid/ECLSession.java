@@ -30,7 +30,7 @@ import jackpal.androidterm.emulatorview.TermSession;
 public class ECLSession extends TermSession
 {
     private static String TAG = Constants.TAG;
-    private static Boolean isResult = false;
+    /*private static Boolean isResult = false;*/
 
     public ECLSession(Activity a) {
 	InputStream strEntrada = new ECLInputStream();
@@ -62,11 +62,9 @@ public class ECLSession extends TermSession
     @Override
     public void write(byte[] bytes, int offset, int count) {
 	super.write(bytes, offset, count);
-	Log.w(TAG, "ECLSession write: " + bytes[0] +
-	      " count: " + count);
+	Log.w(TAG, "ECLSession write: " + bytes[0] + " count: " + count);
 
-	if ( count == 1 &&
-	     (bytes[0] == '\n' || bytes[0] == '\r' || bytes[0] == 127) ) {
+	if ( count == 1 && bytes[0] == '\n' || bytes[0] == '\r' || bytes[0] == 127 ) {
 	    if ( bytes[0] == 127  ) {
 		byte[] cmdLeft = { (byte) 27, (byte) '[', (byte) 'D' };
 		// ESC [ P (VT100 erase char at cursor)

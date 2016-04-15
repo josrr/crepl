@@ -58,9 +58,8 @@
 (defun get-lines (stream)
   (let ((lines (gethash stream *lines*)))
     ;;(app:logmsg "get-lines ~S:~S" (crepl-stream-name stream) lines)
-    (if lines
-	(apply #'concatenate 'string
-	       (reverse lines)))))
+    (when lines
+      (apply #'concatenate 'string (reverse lines)))))
 
 (defun delete-lines (stream)
   (setf (gethash stream *lines*) nil))

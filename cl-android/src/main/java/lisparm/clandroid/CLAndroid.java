@@ -66,6 +66,7 @@ public class CLAndroid extends Activity
 	@Override
 	public void onReceive(Context context, Intent intent) {
 	    int iniciado = intent.getIntExtra("iniciado", 0);
+	    Log.w(TAG, "iniciado:" + iniciado);
 	    if ( iniciado == 1 ) {
 		Log.w(TAG, "onReceive iniciado: " + iniciado);
 		ECLSession session = new ECLSession(esta);
@@ -159,6 +160,7 @@ public class CLAndroid extends Activity
         uncompressedFilesDir = getDir(APP_RESOURCES_DIR,MODE_PRIVATE);
 	Log.w(TAG, "assetsUncompressed:" + assetsUncompressed);
         if ( !assetsUncompressed ) {
+	    Log.w(TAG, "descomprimiendo en:" + uncompressedFilesDir);
 	    uncompressDir(RESOURCES_DIR,uncompressedFilesDir);
 	    SharedPreferences.Editor editor = settings.edit();
 	    editor.putBoolean("assetsUncompressed", true);
@@ -181,6 +183,7 @@ public class CLAndroid extends Activity
 
 	Intent intentECL;
 	intentECL = new Intent(this, ECLTopLevelService.class);
+	Log.w(TAG, "intentECL:"+intentECL);
 	this.startService(intentECL);
     }
 

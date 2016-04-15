@@ -6,17 +6,6 @@
 #include <android/log.h>
 #endif
 
-#if ANDROID
-#define ECL_TAG "ecl-native"
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, ECL_TAG, __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, ECL_TAG, __VA_ARGS__))
-#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, ECL_TAG, __VA_ARGS__))
-#define LOGV(...) ((void)__android_log_print(ANDROID_LOG_VERBOSE, ECL_TAG, __VA_ARGS__))
-#else
-#define LOGI(...)
-#define LOGW(...)
-#define LOGE(...)
-#endif
 
 #include "ecl-boot.h"
 #include "android-ecl.h"
@@ -27,23 +16,24 @@
 #define ECL_CPP_TAG
 #endif
 
-extern ECL_CPP_TAG void main_lib_ASDF();
-extern ECL_CPP_TAG void main_lib_SOCKETS();
-extern ECL_CPP_TAG void main_lib_SB_BSD_SOCKETS();
-extern ECL_CPP_TAG void main_lib_SERVE_EVENT();
-extern ECL_CPP_TAG void main_lib_ECL_CDB();
-extern ECL_CPP_TAG void main_lib_ECL_HELP();
+/*extern ECL_CPP_TAG void init_lib_ASDF();
+extern ECL_CPP_TAG void init_lib_SOCKETS();
+extern ECL_CPP_TAG void init_lib_SB_BSD_SOCKETS();
+extern ECL_CPP_TAG void init_lib_SERVE_EVENT();
+extern ECL_CPP_TAG void init_lib_ECL_CDB();
+extern ECL_CPP_TAG void init_lib_ECL_HELP();*/
 
 cl_object standard_output;
 cl_object error_output;
 
 cl_object get_stream_buffer(cl_object stream)
 {
-  cl_object name = ecl_make_symbol("GET-LINES","CREPL");
-  cl_object lines = cl_funcall(2, name, stream);
-  if (lines != Cnil)
-      LOGI("get_stream_buffer %p %p", stream, lines);
-  return lines;
+    LOGI("get_stream_buffer %p", stream);
+    cl_object name = ecl_make_symbol("GET-LINES","CREPL");
+    cl_object lines = cl_funcall(2, name, stream);
+    if (lines != Cnil)
+	LOGI("get_stream_buffer %p %p", stream, lines);
+    return lines;
 }
 
 jstring print_stream_buffer(JNIEnv *env, cl_object stream)
@@ -59,37 +49,21 @@ jstring print_stream_buffer(JNIEnv *env, cl_object stream)
 
 int ecl_boot(const char *root_dir)
 {
-  char *ecl = "ecl";
-  char *root_dir_tmp;
-  size_t len = strlen(root_dir)+2;
+    char *ecl = "ecl";
 
-  root_dir_tmp = (char *)calloc(len, sizeof(char));
-  snprintf(root_dir_tmp, len, "%s/", root_dir);
-  setenv("ECLDIR", root_dir_tmp, 1);
-  LOGI("ECLDIR='%s'\n", root_dir_tmp);
-  free((void *)root_dir_tmp);
+    LOGI("ROOT='%s'\n", getenv("ROOT"));
+    LOGI("ECLDIR='%s'\n", getenv("ECLDIR"));
 
-  // ecl_set_option(ECL_OPT_TRAP_SIGFPE, 0);
-  // ecl_set_option(ECL_OPT_TRAP_SIGSEGV, 0);
-  // ecl_set_option(ECL_OPT_TRAP_SIGINT, 0);
-  // ecl_set_option(ECL_OPT_TRAP_SIGILL, 0);
-  // ecl_set_option(ECL_OPT_TRAP_SIGBUS, 0);
-  // ecl_set_option(ECL_OPT_TRAP_INTERRUPT_SIGNAL, 0);
-  // ecl_set_option(ECL_OPT_SIGNAL_HANDLING_THREAD, 0);
-  // ecl_set_option(ECL_OPT_INCREMENTAL_GC, 0);
-
-  cl_boot(1, &ecl);
-  atexit(cl_shutdown);
-
-  main_lib_ECL_HELP();
-  main_lib_ASDF();
-  main_lib_SOCKETS();
-  main_lib_SB_BSD_SOCKETS();
-
-  ecl_toplevel(root_dir);
-  LOGI("ALL LOADED\n");
-
-  return 0;
+    cl_boot(1, &ecl);
+    LOGI("installing bytecodes compiler\n");
+    si_safe_eval(3, c_string_to_object("(si:install-bytecodes-compiler)"), ECL_NIL, OBJNULL);
+    atexit(cl_shutdown);
+    /* init_lib_ECL_HELP();
+       init_lib_ASDF();
+       init_lib_SOCKETS();
+       init_lib_SB_BSD_SOCKETS(); */
+    ecl_toplevel(root_dir);
+    return 0;
 }
 
 void ecl_toplevel(const char *home)
@@ -102,15 +76,16 @@ void ecl_toplevel(const char *home)
     LOGI("START TOP LEVEL\n");
 
     CL_CATCH_ALL_BEGIN(ecl_process_env()) {
-	snprintf(str_lisp, len, "(ext:chdir #P\"%s/\")", home);
+	snprintf(str_lisp, len,"(setq *default-pathname-defaults* #p\"%s/\")"
+		 /*"(ext:chdir #P\"%s/\")"*/, home);
 	si_safe_eval(3, c_string_to_object(str_lisp), Cnil, OBJNULL);
-
 	ecl_make_package(crepl_pkg_str, Cnil, Cnil);
 	si_select_package(ecl_make_simple_base_string("CL-USER", 7));
-	si_safe_eval(3, c_string_to_object("(load \"inicia\")"), Cnil, OBJNULL);
+	si_safe_eval(3, c_string_to_object("(load \"etc/inicia\")"), Cnil, OBJNULL);
 	/*si_select_package(crepl_pkg_str);*/
     } CL_CATCH_ALL_END;
 
+    LOGI("ALL LOADED\n");
     free((void *)str_lisp);
     standard_output = ecl_symbol_value(name_stream);
     name_stream = ecl_make_symbol("*ERROR-OUTPUT*","COMMON-LISP");

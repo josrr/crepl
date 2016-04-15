@@ -19,9 +19,23 @@ android {
         }
     }
 
+    task copyECLLibDIR(type: Copy) {
+    	 from('ecl-libdir/') {
+	     include 'encodings/*'
+	     include '**/*.asd'
+	     include '**/*.fas'
+	     include 'help.doc'
+	 }
+	 into 'src/main/assets/lisp/lib'
+    }
+    project.afterEvaluate {
+    	 prepareDebugDependencies.dependsOn copyECLLibDIR
+    }
+
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild
     }
+
     defaultConfig {
     	applicationId "lisparm.clandroid"
 	minSdkVersion 11
@@ -52,8 +66,7 @@ android {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:deprecation"
-} 
-
+}
 
 dependencies {
 	compile project(':emulatorview')

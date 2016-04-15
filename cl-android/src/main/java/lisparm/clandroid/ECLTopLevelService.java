@@ -49,6 +49,7 @@ import java.lang.Thread;
 import java.lang.ref.WeakReference;
 
 class FromECLHandler extends Handler {
+    private static String TAG = Constants.TAG;
     ECLTopLevelService mService;
     FromECLHandler(ECLTopLevelService s) {
 	mService=s;
@@ -56,14 +57,14 @@ class FromECLHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-	//Log.w(TAG, "sHandler msg.arg1: " + msg.arg1);
+	Log.w(TAG, "sHandler msg.arg1: " + msg.arg1);
 	Intent localIntent = new Intent(Constants.BROADCAST_ACTION);
 	localIntent.addCategory(Intent.CATEGORY_DEFAULT);
 	if ( msg.arg1 == 0 ) {
-	    //Log.w(TAG, "resultado: " + (String)msg.obj);
+	    Log.w(TAG, "resultado: " + (String)msg.obj);
 	    localIntent.putExtra("resultado", (String)msg.obj);
 	} else if ( msg.arg1 == Constants.ECL_INICIADO ) {
-	    //Log.w(TAG, "ecl iniciado: " + msg.arg1);
+	    Log.w(TAG, "ecl iniciado: " + msg.arg1);
 	    localIntent.putExtra("iniciado", 1);
 	}
 	mService.sendBroadcast(localIntent);
@@ -81,11 +82,11 @@ public class ECLTopLevelService extends Service {
 	Log.w(TAG,"ECL Starting...");
 	String user_dir = this.getApplicationInfo().dataDir + "/app_resources";
 	Log.w(TAG, "user_dir=" + user_dir);
-	startECL(user_dir);
+	eclsetup(user_dir);
+	eclstart(user_dir);
 	eclListo = true;
         Log.w(TAG,"ECL Started");
     }
-
 
     private final Handler sHandler = new FromECLHandler(this);
 	/*{
@@ -116,8 +117,9 @@ public class ECLTopLevelService extends Service {
 				    Log.w(TAG, "msg: " + msg.obj);
 				    Message msgResult = Message.obtain();
 				    msgResult.obj =
-					eclExec("(crepl:execute-sexp " +
+					eclexec("(crepl:execute-sexp " +
 						(String)msg.obj + ")");
+				     Log.w(TAG, "despues de eclExec:" + msgResult.obj);
 				    sHandler.sendMessage(msgResult);
 				}
 			    };
@@ -161,11 +163,13 @@ public class ECLTopLevelService extends Service {
 	Log.w(TAG, " ECL destroyed");
     }
 
-    public native void startECL(String path);
-    public native String eclExec(String string);
+    public native void eclstart(String path);
+    public native void eclsetup(String path);
+    public native String eclexec(String string);
     //public native String eclToplevel(String string);
 
     static {
+	System.loadLibrary("ecl");
         System.loadLibrary("android-ecl");
         Log.w(TAG,"Se ha cargado la biblioteca android-ecl");
     }

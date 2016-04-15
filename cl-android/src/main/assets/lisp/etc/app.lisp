@@ -1,7 +1,8 @@
 ;; -*- coding: utf-8 -*-
 (defpackage #:app
   (:export #:*dir*
-	   #:logmsg))
+	   #:logmsg
+	   #:get-quicklisp))
 (in-package #:app)
 (defparameter *dir* *default-pathname-defaults*)
 
@@ -13,3 +14,11 @@
     (apply #'format st (concatenate 'string "~10D: " mensaje "~%")
 	   (get-universal-time) args)
     (finish-output st)))
+
+(defun get-quicklisp ()
+  (format t "Loading the quicklisp subsystem~%")
+  (require '#:ecl-quicklisp)
+  (require '#:deflate)
+  (require '#:ql-minitar)
+  (eval (read-from-string
+         "(setf (symbol-function 'ql-gunzipper:gunzip) #'deflate:gunzip))")))

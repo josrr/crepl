@@ -15,26 +15,26 @@
 BASE_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
+ECL_HOME        := ../../../ecl-android/
+LOCAL_MODULE    := ecl_lib
+LOCAL_PATH      := $(BASE_PATH)
+LOCAL_SRC_FILES := $(ECL_HOME)/lib/libecl.so
+include $(PREBUILT_SHARED_LIBRARY)
 
+include $(CLEAR_VARS)
 ifeq ($(TARGET_ARCH),x86)
 PLATFORM := androidx86
 else
 PLATFORM := android
 endif
 
-ECL_HOME := ../../../../../android/install/$(PLATFORM)
-ECL_VER := $(shell basename $(ECL_HOME)/lib/ecl-* |cut -d "-" -f2)
-
+ECL_HOME        := ../../ecl-android
 LOCAL_MODULE    := android-ecl
-LOCAL_PATH      := $(BASE_PATH)
+#LOCAL_PATH 	:= $(BASE_PATH)
 LOCAL_SRC_FILES := android-ecl.c ecl-boot.c
 LOCAL_CFLAGS    += -I$(ECL_HOME)/include
 LOCAL_CFLAGS    += -g -Wall -DANDROID
-LOCAL_LDLIBS    := -L$(ECL_HOME)/lib
-LOCAL_LDLIBS    += -L$(ECL_HOME)/lib/ecl-$(ECL_VER)
-LOCAL_LDLIBS	+= -lecl -lasdf -leclgmp -lsockets -llog
-LOCAL_LDLIBS 	+= -lsb-bsd-sockets -lserve-event -lecl-help
-LOCAL_LDLIBS	+= -lecl-cdb -leclgc -leclatomic
-
+LOCAL_SHARED_LIBRARIES := ecl_lib
+LOCAL_LDLIBS	+= -llog
 include $(BUILD_SHARED_LIBRARY)
 
