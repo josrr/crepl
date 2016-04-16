@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8-unix; -*-
 
-;;;; Copyright (C) 2015 José Ronquillo Rivera <josrr@ymail.com>
+;;;; Copyright 2015-2016 José Ronquillo Rivera <josrr@ymail.com>
 ;;;; This file is part of CREPL.
 ;;;;
 ;;;; CREPL is free software: you can redistribute it and/or modify
