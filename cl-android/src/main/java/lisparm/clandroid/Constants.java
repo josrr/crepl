@@ -26,4 +26,5 @@ public final class Constants {
     public static final String INIT_ACTION = "lisparm.clandroid.INIT";
     public static final String BROADCAST_ACTION = "lisparm.clandroid.BROADCAST";
     public static final String EXECUTE_ACTION = "lisparm.clandroid.EXECUTE";
+    public static final String FILE_ECL_STATE = "ecl-state.lisp";
 }

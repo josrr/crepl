@@ -51,7 +51,6 @@ public class CLAndroid extends Activity
     private static String TAG = Constants.TAG;
     private static String RESOURCES_DIR = "lisp";
     private static String APP_RESOURCES_DIR = "resources";
-    private static String ARCH_EDITOR = "texto.txt";
     private static boolean DEBUG = true;
     private static boolean teclado = false;
 
@@ -191,14 +190,12 @@ public class CLAndroid extends Activity
     @Override
     protected void onSaveInstanceState (Bundle outState){
 	super.onSaveInstanceState(outState);
-	/*enviaCodigo("(util:escribe-archivo #P\""+ ARCH_EDITOR + "\" \"" +
-	  miEditText.getText().toString() + "\")");*/
     }
 
     @Override
     protected void onRestoreInstanceState (Bundle savedInstanceState){
 	super.onRestoreInstanceState(savedInstanceState);
-	/*enviaCodigo("(util:lee-archivo  #P\"" + ARCH_EDITOR + "\" )");*/
+	//enviaCodigo("(load  #P\"" + Constants.FILE_ECL_STATE + "\")");
     }
 
     public void enviaCodigo(String codigo) {
@@ -226,8 +223,8 @@ public class CLAndroid extends Activity
     {
         switch ( item.getItemId() ) {
 	  case R.id.menu_salir:
+	      enviaCodigo("(crepl:rm-file #P\"" + Constants.FILE_ECL_STATE + "\")");
 	      finish();
-	      /*uncompressDir(RESOURCES_DIR,uncompressedFilesDir);*/
 	      return true;
 	  default:
 	      return super.onOptionsItemSelected(item);

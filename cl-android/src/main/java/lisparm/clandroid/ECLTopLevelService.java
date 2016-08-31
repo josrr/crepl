@@ -84,6 +84,7 @@ public class ECLTopLevelService extends Service {
 	Log.w(TAG, "user_dir=" + user_dir);
 	eclsetup(user_dir);
 	eclstart(user_dir);
+	eclexec("(crepl:load-file #P\"" + Constants.FILE_ECL_STATE + "\")");
 	eclListo = true;
         Log.w(TAG,"ECL Started");
     }
@@ -119,7 +120,10 @@ public class ECLTopLevelService extends Service {
 				    msgResult.obj =
 					eclexec("(crepl:execute-sexp " +
 						(String)msg.obj + ")");
-				     Log.w(TAG, "despues de eclExec:" + msgResult.obj);
+				    eclexec("(crepl:write-line-to-file #P\"" +
+					    Constants.FILE_ECL_STATE + "\"" +
+					    "\"" + (String)msg.obj + "\")");
+				    Log.w(TAG, "despues de eclExec:" + msgResult.obj);
 				    sHandler.sendMessage(msgResult);
 				}
 			    };

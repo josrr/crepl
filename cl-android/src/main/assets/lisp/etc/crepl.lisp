@@ -26,14 +26,41 @@
 	   #:get-lines
 	   #:delete-lines
 	   #:crepl-output-stream
-	   #:crepl-input-stream))
+	   #:crepl-input-stream
+	   #:write-file
+	   #:write-line-to-file
+	   #:load-file
+	   #:rm-file))
 
 (in-package #:crepl)
 
 (defparameter *lines* (make-hash-table))
 
 ;;;;;;;;;;;;;;;;
+(defun load-file (path)
+  (when (probe-file path)
+    (with-open-file (stream path)
+      (loop for line = (read-line stream nil nil)
+	 while line do (eval (read-from-string line))))))
 
+(defun rm-file (path)
+  (when (probe-file path)
+    (delete-file path)))
+
+;;;;;;;;;;;;;;;;
+(defun write-line-to-file (path line)
+  (with-open-file (stream path :direction :output
+			  :if-does-not-exist :create
+			  :if-exists :append)
+    (write-line line stream)
+    (finish-output stream)))
+
+(defun write-file (path data)
+  (with-open-file (stream path :direction :output :if-exists :supersede)
+    (princ data stream)
+    (finish-output stream)))
+
+;;;;;;;;;;;;;;;;
 (defclass crepl-stream ()
   ((buffer :accessor crepl-stream-buffer
 	   :initform (make-array 0 :adjustable t

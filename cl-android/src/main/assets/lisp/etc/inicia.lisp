@@ -45,13 +45,12 @@
 	 asdf:*central-registry*)
 
 (load "etc/app")
-(require '#:util)
 (require '#:crepl)
 
-(util:escribe-archivo #P"central-registry.txt"
-		      (format nil "universal-time=~D~%~S~%"
-			      (get-universal-time)
-			      asdf:*central-registry*))
+(crepl:write-file #P"central-registry.txt"
+		  (format nil "universal-time=~D~%~S~%"
+			  (get-universal-time)
+			  asdf:*central-registry*))
 
 ;; (crepl:_print "Error in eval")
 
